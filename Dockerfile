@@ -16,6 +16,6 @@ ENV FLASK_APP=Interference/app.py
 
 ENV FLASK_ENV=development
 
-EXPOSE 5001:5000
+EXPOSE 5001:1337
 
 CMD ["flask", "run", "--host", "0.0.0.0"]
