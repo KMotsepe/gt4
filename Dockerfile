@@ -3,7 +3,7 @@ FROM python:3.11
 
 MAINTAINER Karabo Motsepe <kemwaura@gmail.com>
 
-WORKDIR /app/gpt4free-main/interference
+WORKDIR /gpt4free-main/interference
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
