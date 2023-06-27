@@ -18,4 +18,4 @@ ENV FLASK_ENV=development
 
 EXPOSE 1337
 
-CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["flask", "app", "--host", "0.0.0.0"]
