@@ -10,8 +10,6 @@ RUN pip install -r requirements.txt
 
 COPY ./gpt4free-main /app
 
-WORKDIR /app/Interference
-
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=development
 
