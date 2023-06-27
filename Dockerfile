@@ -8,7 +8,7 @@ WORKDIR /app/gpt4free-main/Interference
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY ./gpt4free-main /app
+COPY . .
 
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=development
