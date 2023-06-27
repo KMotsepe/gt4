@@ -1,7 +1,21 @@
-#
-FROM python:3.11 
-WORKDIR /gpt4free-main
-COPY ./requirements.txt /gpt4free-main/requirements.txt
+#Dockerfile 
+
+FROM python:3.11
+
+MAINTAINER Karabo Motsepe "kemwaura@gmail.com"
+
+COPY ./requirements.txt /app/requirements.txt
+
 RUN pip install -r requirements.txt
-COPY ./interference/app.py /gpt4free-main/interference/
-CMD ["py -m interference.app"]
+
+COPY . /Interference
+
+WORKDIR Interference
+
+ENV FLASK_APP=Interference/app.py
+
+ENV FLASK_ENV=development
+
+EXPOSE 5001:5000
+
+CMD ["flask", "run", "--host", "0.0.0.0"]
