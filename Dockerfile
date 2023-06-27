@@ -1,19 +1,18 @@
-#Dockerfile 
-
+# Dockerfile
 FROM python:3.11
 
-MAINTAINER Karabo Motsepe "kemwaura@gmail.com"
+MAINTAINER Karabo Motsepe <kemwaura@gmail.com>
 
-COPY . .
+WORKDIR /app
 
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . /Interference
+COPY . /app
 
-WORKDIR Interference
+WORKDIR /app/Interference
 
-ENV FLASK_APP=/Interference/app.py
-
+ENV FLASK_APP=app.py
 ENV FLASK_ENV=development
 
 EXPOSE 1337
