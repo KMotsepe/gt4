@@ -2,27 +2,28 @@ import os
 import time
 import json
 import random
+import asyncio
 
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from g4f import Model, ChatCompletion, Provider
-from flask import Flask, request, Response
-from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-@app.route("/chat/completions", methods=['POST'])
-def chat_completions():
-    streaming = request.json.get('stream', False)
-    model = request.json.get('model', 'gpt-3.5-turbo')
-    messages = request.json.get('messages')
+@app.post("/chat/completions")
+async def chat_completions(request: Request):
+    data = await request.json()
+    streaming = data.get('stream', False)
+    model = data.get('model', 'gpt-3.5-turbo')
+    messages = data.get('messages')
     
-    response = ChatCompletion.create(model=model, stream=streaming,
-                                     messages=messages)
+    response = ChatCompletion.create(model=model, stream=streaming, messages=messages)
     
     if not streaming:
         while 'curl_cffi.requests.errors.RequestsError' in response:
-            response = ChatCompletion.create(model=model, stream=streaming,
-                                             messages=messages)
+            response = ChatCompletion.create(model=model, stream=streaming, messages=messages)
 
         completion_timestamp = int(time.time())
         completion_id = ''.join(random.choices(
@@ -48,7 +49,7 @@ def chat_completions():
             }]
         }
 
-    def stream():
+    async def stream():
         for token in response:
             completion_timestamp = int(time.time())
             completion_id = ''.join(random.choices(
@@ -70,17 +71,15 @@ def chat_completions():
                 ]
             }
 
-            yield 'data: %s\n\n' % json.dumps(completion_data, separators=(',' ':'))
-            time.sleep(0.1)
+            yield 'data: %s\n\n' % json.dumps(completion_data, separators=(',', ':'))
+            await asyncio.sleep(0.1)
 
-    return app.response_class(stream(), mimetype='text/event-stream')
-
+    return StreamingResponse(stream(), media_type='text/event-stream')
 
 if __name__ == '__main__':
+    import uvicorn
     config = {
         'host': '0.0.0.0',
-        'port': 1337,
-        'debug': True
+        'port': 1337
     }
-
-    app.run(**config)
+    uvicorn.run(app, **config)
