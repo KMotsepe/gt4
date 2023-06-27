@@ -4,7 +4,7 @@ FROM python:3.11
 
 MAINTAINER Karabo Motsepe "kemwaura@gmail.com"
 
-COPY ./requirements.txt /app/requirements.txt
+COPY . .
 
 RUN pip install -r requirements.txt
 
