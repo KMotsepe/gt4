@@ -3,12 +3,12 @@ FROM python:3.11
 
 MAINTAINER Karabo Motsepe <kemwaura@gmail.com>
 
-WORKDIR /app
+WORKDIR /app/gpt4free-main/Interference
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . /app
+COPY ./gpt4free-main /app
 
 WORKDIR /app/Interference
 
